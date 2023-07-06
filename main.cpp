@@ -43,9 +43,20 @@ void loadPieces(sf::Texture& texture) {
 				sf::IntRect((piece - 1) * size, color * size, size, size)
 			);
 
-			pieces[i].setPosition(x * 64, y * 64);
+			pieces[i].setPosition(x * size, y * size);
 
 			i++;
+		}
+	}
+}
+
+void checkCapture(sf::Sprite& piece) {
+	for (int i = 0; i < 32; i++) {
+		if (pieces[i].getPosition().x == piece.getPosition().x && 
+			pieces[i].getPosition().y == piece.getPosition().y &&
+			&pieces[i] != &piece) {
+				// Hiding piece
+				pieces[i].setPosition(-100, -100);
 		}
 	}
 }
@@ -101,6 +112,7 @@ int main() {
 					int x_factor = center_x / 64;
 					int y_factor = center_y / 64;
 					draggedPiece->setPosition(64 * x_factor, 64 * y_factor);
+					checkCapture(*draggedPiece);
 					
 					draggedPiece = nullptr;
 				}
