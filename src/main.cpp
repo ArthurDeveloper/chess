@@ -8,13 +8,13 @@
 #include <iostream>
 #include <cmath>
 #include <ostream>
-#include "pieces.h"
+#include "piece.h"
 
 #define BLACK 1
 #define WHITE 0
 
-sf::Sprite pieces[32];
-sf::Sprite *draggedPiece = nullptr;
+Piece pieces[32];
+Piece *draggedPiece = nullptr;
 
 int board[8][8] = {
 	-ROOK, -KNIGHT, -BISHOP, -QUEEN, -KING, -BISHOP,  -KNIGHT, -ROOK,
@@ -31,29 +31,34 @@ void loadPieces(sf::Texture& texture) {
 	int i = 0;
 	for (int y = 0; y < 8; y++) {
 		for (int x = 0; x < 8; x++) {
-			int piece = board[y][x];
-			if (piece == 0) continue;
-			int color = piece < 0 ? BLACK : WHITE;
-			piece = abs(piece);
+			int piece_square = board[y][x];
+			if (piece_square == 0) continue;
+			int color = piece_square < 0 ? BLACK : WHITE;
+			piece_square = abs(piece_square);
 
 			int size = 64;
 
-			pieces[i].setTexture(texture);
-			pieces[i].setTextureRect(
-				sf::IntRect((piece - 1) * size, color * size, size, size)
+			sf::Sprite piece_sprite;
+
+			piece_sprite.setTexture(texture);
+			piece_sprite.setTextureRect(
+				sf::IntRect((piece_square - 1) * size, color * size, size, size)
 			);
 
-			pieces[i].setPosition(x * size, y * size);
+			piece_sprite.setPosition(x * size, y * size);
+
+			Piece piece(piece_square, piece_sprite);
+			pieces[i] = piece;
 
 			i++;
 		}
 	}
 }
 
-void checkCapture(sf::Sprite& piece) {
+void checkCapture(Piece& piece) {
 	for (int i = 0; i < 32; i++) {
-		if (pieces[i].getPosition().x == piece.getPosition().x && 
-			pieces[i].getPosition().y == piece.getPosition().y &&
+		if (pieces[i].getX() == piece.getX() && 
+			pieces[i].getY() == piece.getY() &&
 			&pieces[i] != &piece) {
 				// Hiding piece
 				pieces[i].setPosition(-100, -100);
@@ -97,7 +102,7 @@ int main() {
 			if (event.type == sf::Event::MouseButtonPressed) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					for (int i = 0; i < 32; i++) {
-						if (pieces[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y)) {
+						if (pieces[i].isInsideBounds(mouse_position.x, mouse_position.y)) {
 							draggedPiece = &pieces[i];
 						}
 					}
@@ -107,8 +112,8 @@ int main() {
 			if (event.type == sf::Event::MouseButtonReleased) {
 				if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && draggedPiece) {
 					// Adjusting the position to the nearest square
-					int center_x = draggedPiece->getPosition().x + 32;
-					int center_y = draggedPiece->getPosition().y + 32;
+					int center_x = draggedPiece->getX() + 32;
+					int center_y = draggedPiece->getY() + 32;
 					int x_factor = center_x / 64;
 					int y_factor = center_y / 64;
 					draggedPiece->setPosition(64 * x_factor, 64 * y_factor);
@@ -127,7 +132,7 @@ int main() {
 		
 		window.draw(board_sprite);
 		for (auto piece : pieces) {
-			window.draw(piece);
+			piece.draw(window);
 		}
 
 		window.display();
