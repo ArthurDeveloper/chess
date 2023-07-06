@@ -8,14 +8,20 @@
 #define PAWN	6
 #define EMPTY	0
 
+#define BLACK 1
+#define WHITE 0
+
 class Piece {
 private:
 	int type;
+	int color;
 	sf::Sprite sprite;
 
 public:
 	int getX();
 	int getY();
+	int getColor();
+	
 	void setPosition(int x, int y);
 
 	bool isInsideBounds(int x, int y);
@@ -23,6 +29,6 @@ public:
 	void draw(sf::RenderWindow& window);
 
 	Piece();
-	Piece(int type, sf::Sprite sprite);
+	Piece(int type, int color, sf::Sprite sprite);
 
 };

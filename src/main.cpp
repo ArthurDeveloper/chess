@@ -10,9 +10,6 @@
 #include <ostream>
 #include "piece.h"
 
-#define BLACK 1
-#define WHITE 0
-
 Piece pieces[32];
 Piece *draggedPiece = nullptr;
 
@@ -47,7 +44,7 @@ void loadPieces(sf::Texture& texture) {
 
 			piece_sprite.setPosition(x * size, y * size);
 
-			Piece piece(piece_square, piece_sprite);
+			Piece piece(piece_square, color, piece_sprite);
 			pieces[i] = piece;
 
 			i++;
@@ -59,6 +56,7 @@ void checkCapture(Piece& piece) {
 	for (int i = 0; i < 32; i++) {
 		if (pieces[i].getX() == piece.getX() && 
 			pieces[i].getY() == piece.getY() &&
+			pieces[i].getColor() != piece.getColor() &&
 			&pieces[i] != &piece) {
 				// Hiding piece
 				pieces[i].setPosition(-100, -100);

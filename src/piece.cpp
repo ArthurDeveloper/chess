@@ -3,8 +3,9 @@
 
 Piece::Piece() {}
 
-Piece::Piece(int type, sf::Sprite sprite) {
+Piece::Piece(int type, int color, sf::Sprite sprite) {
 	this->type = type;
+	this->color = color;
 	this->sprite = sprite;
 }
 
@@ -14,6 +15,10 @@ int Piece::getX() {
 
 int Piece::getY() {
 	return sprite.getPosition().y;
+}
+
+int Piece::getColor() {
+	return color;
 }
 
 void Piece::setPosition(int x, int y) {
