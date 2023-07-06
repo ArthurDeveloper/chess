@@ -14,6 +14,7 @@
 #define WHITE 0
 
 sf::Sprite pieces[32];
+sf::Sprite *draggedPiece = nullptr;
 
 int board[8][8] = {
 	-ROOK, -KNIGHT, -BISHOP, -QUEEN, -KING, -BISHOP,  -KNIGHT, -ROOK,
@@ -25,8 +26,6 @@ int board[8][8] = {
 	PAWN,  PAWN, 	PAWN,    PAWN,   PAWN,  PAWN,     PAWN,    PAWN,
 	ROOK,  KNIGHT,  BISHOP,  QUEEN,  KING,  BISHOP,   KNIGHT,  ROOK,
 };
-
-sf::Sprite *draggedPiece = nullptr;
 
 void loadPieces(sf::Texture& texture) {
 	int i = 0;
@@ -43,10 +42,6 @@ void loadPieces(sf::Texture& texture) {
 			pieces[i].setTextureRect(
 				sf::IntRect((piece - 1) * size, color * size, size, size)
 			);
-
-			/*pieces[i].setTextureRect(
-				sf::IntRect(0, 0, 56, 56)
-			);*/
 
 			pieces[i].setPosition(x * 64, y * 64);
 
@@ -105,17 +100,6 @@ int main() {
 				}
 			}
 		}
-
-		/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			std::cout << "my mans clicking hard af fr" << std::endl;
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-				for (int i = 0; i < 32; i++) {
-					if (pieces[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y)) {
-						pieces[i].setPosition(mouse_position.x-32, mouse_position.y-32);
-					}
-				}
-			}
-		}*/
 
 		if (draggedPiece != nullptr) {
 			draggedPiece->setPosition(mouse_position.x-32, mouse_position.y-32);
