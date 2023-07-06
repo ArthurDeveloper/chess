@@ -94,7 +94,7 @@ int main() {
 			}
 
 			if (event.type == sf::Event::MouseButtonReleased) {
-				if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && draggedPiece) {
 					// Adjusting the position to the nearest square
 					int center_x = draggedPiece->getPosition().x + 32;
 					int center_y = draggedPiece->getPosition().y + 32;
@@ -107,7 +107,7 @@ int main() {
 			}
 		}
 
-		if (draggedPiece != nullptr) {
+		if (draggedPiece) {
 			draggedPiece->setPosition(mouse_position.x-32, mouse_position.y-32);
 		}
 
