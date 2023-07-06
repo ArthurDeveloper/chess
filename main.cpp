@@ -76,7 +76,6 @@ int main() {
 	while (window.isOpen()) {
 		sf::Vector2i mouse_position = sf::Mouse::getPosition(window); 
 
-
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
@@ -96,6 +95,13 @@ int main() {
 
 			if (event.type == sf::Event::MouseButtonReleased) {
 				if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					// Adjusting the position to the nearest square
+					int center_x = draggedPiece->getPosition().x + 32;
+					int center_y = draggedPiece->getPosition().y + 32;
+					int x_factor = center_x / 64;
+					int y_factor = center_y / 64;
+					draggedPiece->setPosition(64 * x_factor, 64 * y_factor);
+					
 					draggedPiece = nullptr;
 				}
 			}
