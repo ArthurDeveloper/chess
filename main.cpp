@@ -3,9 +3,11 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/Mouse.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 #include <iostream>
 #include <cmath>
+#include <ostream>
 #include "pieces.h"
 
 #define BLACK 1
@@ -23,6 +25,8 @@ int board[8][8] = {
 	PAWN,  PAWN, 	PAWN,    PAWN,   PAWN,  PAWN,     PAWN,    PAWN,
 	ROOK,  KNIGHT,  BISHOP,  QUEEN,  KING,  BISHOP,   KNIGHT,  ROOK,
 };
+
+sf::Sprite *draggedPiece = nullptr;
 
 void loadPieces(sf::Texture& texture) {
 	int i = 0;
@@ -75,12 +79,46 @@ int main() {
 	
 
 	while (window.isOpen()) {
+		sf::Vector2i mouse_position = sf::Mouse::getPosition(window); 
+
+
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
+
+			if (event.type == sf::Event::MouseButtonPressed) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					for (int i = 0; i < 32; i++) {
+						if (pieces[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y)) {
+							draggedPiece = &pieces[i];
+						}
+					}
+				}
+			}
+
+			if (event.type == sf::Event::MouseButtonReleased) {
+				if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					draggedPiece = nullptr;
+				}
+			}
+		}
+
+		/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			std::cout << "my mans clicking hard af fr" << std::endl;
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				for (int i = 0; i < 32; i++) {
+					if (pieces[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y)) {
+						pieces[i].setPosition(mouse_position.x-32, mouse_position.y-32);
+					}
+				}
+			}
+		}*/
+
+		if (draggedPiece != nullptr) {
+			draggedPiece->setPosition(mouse_position.x-32, mouse_position.y-32);
 		}
 
 		window.clear();
