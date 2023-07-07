@@ -25,6 +25,8 @@ int board[8][8] = {
 	ROOK,  KNIGHT,  BISHOP,  QUEEN,  KING,  BISHOP,   KNIGHT,  ROOK,
 };
 
+int turn = WHITE;
+
 void loadPieces(sf::Texture& texture) {
 	int i = 0;
 	for (int y = 0; y < 8; y++) {
@@ -120,6 +122,10 @@ int main() {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 					for (int i = 0; i < 32; i++) {
 						if (pieces[i].isInsideBounds(mouse_position.x, mouse_position.y)) {
+							if (pieces[i].getColor() != turn) {
+								break;
+							}
+							
 							draggedPiece = &pieces[i];
 
 							std::vector<int> boardCoords = draggedPiece->getBoardCoords();
@@ -146,6 +152,8 @@ int main() {
 					std::cout << draggedPiece->getCoordsInChessNotation() << std::endl;
 
 					draggedPiece = nullptr;
+
+					turn = !turn;
 				}
 			}
 		}
