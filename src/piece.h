@@ -21,7 +21,8 @@ public:
 	int getX();
 	int getY();
 	int getColor();
-	
+	int getType();
+
 	void setPosition(int x, int y);
 
 	bool isInsideBounds(int x, int y);

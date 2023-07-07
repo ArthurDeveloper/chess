@@ -21,6 +21,10 @@ int Piece::getColor() {
 	return color;
 }
 
+int Piece::getType() {
+	return type;
+}
+
 void Piece::setPosition(int x, int y) {
 	sprite.setPosition(x, y);
 }
