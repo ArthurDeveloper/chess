@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
 #define KING	1
 #define QUEEN	2
@@ -22,6 +23,7 @@ public:
 	int getY();
 	int getColor();
 	int getType();
+	std::vector<int> getBoardCoords();
 
 	void setPosition(int x, int y);
 

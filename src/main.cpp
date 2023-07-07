@@ -53,11 +53,6 @@ void loadPieces(sf::Texture& texture) {
 	}
 }
 
-std::vector<int> getBoardCoords(int x, int y) {
-	std::vector<int> coords = { (int)floor((float)y / 64), (int)floor((float)x / 64) };
-	return coords;
-}
-
 void checkCapture(Piece& piece) {
 	for (int i = 0; i < 32; i++) {
 		if (pieces[i].getX() == piece.getX() && 
@@ -69,7 +64,7 @@ void checkCapture(Piece& piece) {
 		}
 	}
 
-	std::vector<int> boardCoords = getBoardCoords(piece.getX(), piece.getY());
+	std::vector<int> boardCoords = piece.getBoardCoords();
 	board[boardCoords[0]][boardCoords[1]] = piece.getType();
 }
 
@@ -78,6 +73,10 @@ void printBoard() {
 	system("clear");
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
+			if (board[i][j] == 0) {
+				std::cout << "  ";
+				continue;
+			}
 			std::cout << abs(board[i][j]) << " ";
 		}
 		std::cout << std::endl;
@@ -105,7 +104,7 @@ int main() {
 	}
 
 	loadPieces(pieces_texture);
-	
+
 
 	while (window.isOpen()) {
 		sf::Vector2i mouse_position = sf::Mouse::getPosition(window); 
@@ -123,12 +122,8 @@ int main() {
 						if (pieces[i].isInsideBounds(mouse_position.x, mouse_position.y)) {
 							draggedPiece = &pieces[i];
 
-							int center_x = draggedPiece->getX() + 32;
-							int center_y = draggedPiece->getY() + 32;
-							int x_factor = center_x / 64;
-							int y_factor = center_y / 64;
+							std::vector<int> boardCoords = draggedPiece->getBoardCoords();
 
-							std::vector<int> boardCoords = getBoardCoords(64 * x_factor, 64 * y_factor);
 							board[boardCoords[0]][boardCoords[1]] = EMPTY;
 						}
 					}

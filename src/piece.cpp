@@ -25,6 +25,11 @@ int Piece::getType() {
 	return type;
 }
 
+std::vector<int> Piece::getBoardCoords() {
+	std::vector<int> coords = { (int)floor((float)getY() / 64), (int)floor((float)getX() / 64) };
+	return coords;
+}
+
 void Piece::setPosition(int x, int y) {
 	sprite.setPosition(x, y);
 }
