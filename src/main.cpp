@@ -140,7 +140,10 @@ int main() {
 					draggedPiece->setPosition(64 * x_factor, 64 * y_factor);
 					checkCapture(*draggedPiece);
 
-					printBoard();
+					//printBoard();
+
+					system("clear");
+					std::cout << draggedPiece->getCoordsInChessNotation() << std::endl;
 
 					draggedPiece = nullptr;
 				}

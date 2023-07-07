@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <cmath>
 
 #define KING	1
@@ -24,6 +25,7 @@ public:
 	int getColor();
 	int getType();
 	std::vector<int> getBoardCoords();
+	std::string getCoordsInChessNotation();
 
 	void setPosition(int x, int y);
 

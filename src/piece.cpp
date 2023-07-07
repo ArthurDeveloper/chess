@@ -30,6 +30,44 @@ std::vector<int> Piece::getBoardCoords() {
 	return coords;
 }
 
+std::string Piece::getCoordsInChessNotation() {
+	std::vector<int> coords = getBoardCoords();
+	
+	char piece;
+	char file;
+	char rank;
+
+	switch (type) {
+		case KING:
+			piece = 'K';
+			break;
+		case QUEEN:
+			piece = 'Q';
+			break;
+		case BISHOP:
+			piece = 'B';
+			break;
+		case KNIGHT:
+			piece = 'N';
+			break;
+		case ROOK:
+			piece = 'R';
+			break;
+		case PAWN:
+			piece = '\0';
+			break;
+	}
+
+
+	std::string files = "abcdefgh";
+	file = files[coords[1]];
+
+	std::string ranks = "87654321";
+	rank = ranks[coords[0]];
+
+	return std::string({piece, file, rank});
+}
+
 void Piece::setPosition(int x, int y) {
 	sprite.setPosition(x, y);
 }
