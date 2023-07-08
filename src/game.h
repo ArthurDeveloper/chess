@@ -19,12 +19,14 @@ private:
 	sf::Sprite boardSprite;
 
 	void loadBoard();
+	void printBoard();
 
 public:
 	void loadPieces();
 	void dragPiece(sf::RenderWindow& window);
 
-	void checkCapture(Piece& piece);
+	bool checkCapture(Piece& piece);
+	bool checkOverlap(Piece& piece);
 
 	void handleEvents(sf::RenderWindow& window);
 	void draw(sf::RenderWindow& window);

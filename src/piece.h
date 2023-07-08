@@ -19,6 +19,8 @@ private:
 	int color;
 	sf::Sprite sprite;
 
+	std::vector<int> lastBoardPosition;
+
 public:
 	int getX();
 	int getY();
@@ -27,6 +29,8 @@ public:
 	std::vector<int> getBoardCoords();
 	std::string getCoordsInChessNotation();
 
+	void goOneMoveBack();
+	void setLastBoardPosition(int x, int y);
 	void setPosition(int x, int y);
 
 	bool isInsideBounds(int x, int y);

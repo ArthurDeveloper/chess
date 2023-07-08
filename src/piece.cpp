@@ -68,6 +68,14 @@ std::string Piece::getCoordsInChessNotation() {
 	return std::string({piece, file, rank});
 }
 
+void Piece::goOneMoveBack() {
+	setPosition(lastBoardPosition[1] * 64, lastBoardPosition[0] * 64);
+}
+
+void Piece::setLastBoardPosition(int rank, int file) {
+	lastBoardPosition = {rank, file};
+}
+
 void Piece::setPosition(int x, int y) {
 	sprite.setPosition(x, y);
 }
