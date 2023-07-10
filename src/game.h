@@ -1,15 +1,12 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include "piece.h"
+#include "board.h"
 
 class Game {
 private:
 	bool isRunning;
 
 	int turn;
-	std::vector<std::vector<int>> board;
+	Board board;
 
-	Piece pieces[32];
 	Piece *draggedPiece;
 
 	sf::Vector2i mousePosition;
