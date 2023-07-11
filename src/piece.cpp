@@ -30,6 +30,10 @@ std::vector<int> Piece::getBoardCoords() {
 	return coords;
 }
 
+std::vector<int> Piece::getLastBoardCoords() {
+	return lastBoardPosition;
+}
+
 std::string Piece::getCoordsInChessNotation() {
 	std::vector<int> coords = getBoardCoords();
 	

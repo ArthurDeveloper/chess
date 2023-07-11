@@ -26,18 +26,22 @@ void Board::init() {
 }
 
 void Board::loadPieces() {
-	pieces.resize(32);
+	pieces.resize(0);
 
 	if (!piecesTexture.loadFromFile("res/pieces.png")) {
 		std::cerr << "Couldn't load pieces" << std::endl;
 		return;
 	}
 
+	// TODO: Make a loop through all the squares and skip empty squares
 	int i = 0;
 	for (int y = 0; y < 8; y++) {
 		for (int x = 0; x < 8; x++) {
 			int pieceSquare = squares[y][x];
 			if (!pieceSquare) continue;
+			
+			pieces.resize(pieces.size() + 1);
+
 			int color = pieceSquare < 0 ? BLACK : WHITE;
 			pieceSquare = abs(pieceSquare);
 
@@ -74,6 +78,23 @@ std::vector<int>& Board::operator[](int at) {
 
 int& Board::operator[](std::vector<int> at) {
 	return squares[at[0]][at[1]];
+}
+
+bool Board::makeMove(Piece& piece, std::vector<int> move) {
+	if ((*this)[move] != EMPTY) {
+		int squareColor = (*this)[move] > 0 ? WHITE : BLACK;
+		if (squareColor == piece.getColor()) { 
+			std::vector<int> lastCoords = piece.getLastBoardCoords();
+			(*this)[lastCoords] = piece.getType();
+			loadPieces();
+			return false; 
+		}
+	}
+
+	(*this)[move] = piece.getType() * (piece.getColor() == WHITE ? 1 : -1);
+	loadPieces();
+
+	return true;
 }
 
 void Board::draw(sf::RenderWindow& window) {

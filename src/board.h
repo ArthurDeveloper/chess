@@ -24,6 +24,8 @@ public:
 	std::vector<int>& operator[](int at);
 	int& operator[](std::vector<int> at);
 
+	bool makeMove(Piece& piece, std::vector<int> move);
+
 	void draw(sf::RenderWindow& window);
 
 	Board();

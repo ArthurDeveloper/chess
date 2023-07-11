@@ -22,8 +22,6 @@ bool Game::checkCapture(Piece& piece) {
 			board.pieces[i].getY() == piece.getY() &&
 			board.pieces[i].getColor() != piece.getColor() && 
 			&board.pieces[i] != &piece) {
-				// Hiding captured piece
-				board.pieces[i].setPosition(-100, -100);
 				hasCaptured = true;
 		}
 	}
@@ -84,21 +82,11 @@ void Game::handleEvents(sf::RenderWindow& window) {
 				int y_factor = center_y / 64;
 				draggedPiece->setPosition(64 * x_factor, 64 * y_factor);
 
-				std::vector<int> boardCoords = draggedPiece->getBoardCoords();
-				board[boardCoords[0]][boardCoords[1]] = draggedPiece->getType();
-
-				checkCapture(*draggedPiece);
-				if (checkOverlap(*draggedPiece)) {
-					draggedPiece->goOneMoveBack();
-					draggedPiece = nullptr;
-					return;
+				if (board.makeMove(*draggedPiece, draggedPiece->getBoardCoords())) {
+					turn = !turn;
 				}
 
-				std::cout << draggedPiece->getCoordsInChessNotation() << std::endl;
-
 				draggedPiece = nullptr;
-
-				turn = !turn;
 			}
 		}
 	}

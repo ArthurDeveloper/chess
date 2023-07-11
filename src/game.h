@@ -15,11 +15,7 @@ private:
 	sf::Texture boardTexture;
 	sf::Sprite boardSprite;
 
-	void loadBoard();
-	void printBoard();
-
 public:
-	void loadPieces();
 	void dragPiece(sf::RenderWindow& window);
 
 	bool checkCapture(Piece& piece);

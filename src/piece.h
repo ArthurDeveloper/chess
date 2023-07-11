@@ -27,6 +27,7 @@ public:
 	int getColor();
 	int getType();
 	std::vector<int> getBoardCoords();
+	std::vector<int> getLastBoardCoords();
 	std::string getCoordsInChessNotation();
 
 	void goOneMoveBack();
