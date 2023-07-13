@@ -30,6 +30,7 @@ public:
 	std::vector<int> getBoardCoords();
 	std::vector<int> getLastBoardCoords();
 	std::string getCoordsInChessNotation();
+	std::string getCoordsInChessNotationWithCapture();
 
 	void goOneMoveBack();
 	void setLastBoardPosition(int x, int y);

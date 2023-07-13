@@ -5,6 +5,7 @@
 class Board {
 private:
 	std::vector<std::vector<int>> squares;
+	std::vector<std::vector<std::string>> playedMoves;
 
 	sf::Texture boardTexture;
 	sf::Sprite boardSprite;
@@ -25,6 +26,8 @@ private:
 	bool isInsideBoard(std::vector<int> coords);
 
 	bool isMoveValid(Piece piece, std::vector<int> move);
+
+	void printMoveHistory();
 
 public:
 	std::vector<Piece> pieces;

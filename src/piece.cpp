@@ -72,6 +72,21 @@ std::string Piece::getCoordsInChessNotation() {
 	return std::string({piece, file, rank});
 }
 
+std::string Piece::getCoordsInChessNotationWithCapture() {
+	std::string chessNote = getCoordsInChessNotation();
+
+	if (type == PAWN) {
+		std::vector<int> lastCoords = getLastBoardCoords();
+
+		std::string files = "abcdefgh";
+		char lastFile = files[lastCoords[1]];
+
+		return std::string({ lastFile, chessNote[0], 'x', chessNote[1], chessNote[2] });
+	}
+
+	return std::string({ chessNote[0], 'x', chessNote[1], chessNote[2] });
+}
+
 void Piece::goOneMoveBack() {
 	setPosition(lastBoardPosition[1] * 64, lastBoardPosition[0] * 64);
 }

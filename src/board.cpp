@@ -109,6 +109,23 @@ bool Board::isInsideBoard(std::vector<int> coords) {
 	return coords[0] >= 0 && coords[0] < squares.size() && coords[1] >= 0 && coords[1] < squares[0].size();
 }
 
+void Board::printMoveHistory() {
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
+	int i = 1;
+	for (auto playedMove : playedMoves) {
+		if (playedMove.size() == 2) {
+			std::cout << i << ". " << playedMove[0] << " " << playedMove[1] << std::endl;
+		} else if (playedMove.size() == 1) {
+			std::cout << i << ". " << playedMove[0] << std::endl;
+		}
+		i++;
+	}
+}
+
 bool Board::isMoveValid(Piece piece, std::vector<int> move) {
 	std::vector<std::vector<int>> validMoves;
 	std::vector<int> lastBoardCoords = piece.getLastBoardCoords();
@@ -321,6 +338,7 @@ bool Board::makeMove(Piece& piece, std::vector<int> move) {
 		return false;
 	}
 
+	bool isCapture = false;
 	if ((*this)[move] != EMPTY) {
 		int squareColor = getSquareColor((*this)[move]);
 		if (squareColor == piece.getColor()) { 
@@ -328,7 +346,26 @@ bool Board::makeMove(Piece& piece, std::vector<int> move) {
 			loadPieces();
 			return false; 
 		}
+
+		isCapture = true;
 	}
+
+	std::string chessNote = isCapture ? piece.getCoordsInChessNotationWithCapture() : piece.getCoordsInChessNotation();
+
+	if (playedMoves.size() == 0) {
+		playedMoves.resize(playedMoves.size() + 1);
+	}
+
+	if (playedMoves[playedMoves.size() - 1].size() == 0) {
+		playedMoves[playedMoves.size() - 1].resize(1);
+		playedMoves[playedMoves.size() - 1][0] = chessNote;
+	} else {
+		playedMoves[playedMoves.size() - 1].resize(2);
+		playedMoves[playedMoves.size() - 1][1] = chessNote;
+		playedMoves.resize(playedMoves.size() + 1);
+	}
+
+	printMoveHistory();
 
 	(*this)[lastCoords] = EMPTY;
 	(*this)[move] = piece.getType() * colorFactor;
