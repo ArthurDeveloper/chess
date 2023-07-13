@@ -10,8 +10,8 @@
 #define PAWN	6
 #define EMPTY	0
 
-#define BLACK 1
-#define WHITE 0
+#define BLACK 	1
+#define WHITE 	0
 
 class Piece {
 private:
@@ -22,6 +22,7 @@ private:
 	std::vector<int> lastBoardPosition;
 
 public:
+
 	int getX();
 	int getY();
 	int getColor();

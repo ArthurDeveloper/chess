@@ -14,6 +14,18 @@ private:
 
 	void loadPieces();
 
+	int getSquareColor(int square);
+	int getSquareColor(std::vector<int> square);
+
+	std::vector<int> squareAbove(std::vector<int> square);
+	std::vector<int> squareBelow(std::vector<int> square);
+	std::vector<int> squareAtRight(std::vector<int> square);
+	std::vector<int> squareAtLeft(std::vector<int> square);
+
+	bool isInsideBoard(std::vector<int> coords);
+
+	bool isMoveValid(Piece piece, std::vector<int> move);
+
 public:
 	std::vector<Piece> pieces;
 

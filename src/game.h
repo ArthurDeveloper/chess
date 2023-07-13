@@ -18,9 +18,6 @@ private:
 public:
 	void dragPiece(sf::RenderWindow& window);
 
-	bool checkCapture(Piece& piece);
-	bool checkOverlap(Piece& piece);
-
 	void handleEvents(sf::RenderWindow& window);
 	void draw(sf::RenderWindow& window);
 

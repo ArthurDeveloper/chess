@@ -14,37 +14,6 @@ void Game::dragPiece(sf::RenderWindow& window) {
 	}
 }
 
-bool Game::checkCapture(Piece& piece) {
-	bool hasCaptured = false;
-
-	for (int i = 0; i < 32; i++) {
-		if (board.pieces[i].getX() == piece.getX() && 
-			board.pieces[i].getY() == piece.getY() &&
-			board.pieces[i].getColor() != piece.getColor() && 
-			&board.pieces[i] != &piece) {
-				hasCaptured = true;
-		}
-	}
-
-	return hasCaptured;
-}
-
-bool Game::checkOverlap(Piece& piece) {
-	bool hasOverlap = false;
-
-	for (int i = 0; i < 32; i++) {
-		if (board.pieces[i].getX() == piece.getX() && 
-			board.pieces[i].getY() == piece.getY() &&
-			board.pieces[i].getColor() == piece.getColor() &&
-			&board.pieces[i] != &piece) {
-				hasOverlap = true;
-				break;
-		}
-	}
-
-	return hasOverlap;
-}
-
 void Game::handleEvents(sf::RenderWindow& window) {
 	sf::Event event;
 	while (window.pollEvent(event)) {
@@ -66,8 +35,6 @@ void Game::handleEvents(sf::RenderWindow& window) {
 						std::vector<int> boardCoords = draggedPiece->getBoardCoords();
 
 						draggedPiece->setLastBoardPosition(boardCoords[0], boardCoords[1]);
-
-						board[boardCoords[0]][boardCoords[1]] = EMPTY;
 					}
 				}
 			}
@@ -82,7 +49,7 @@ void Game::handleEvents(sf::RenderWindow& window) {
 				int y_factor = center_y / 64;
 				draggedPiece->setPosition(64 * x_factor, 64 * y_factor);
 
-				if (board.makeMove(*draggedPiece, draggedPiece->getBoardCoords())) {
+				if (board.makeMove(*draggedPiece, { y_factor, x_factor })) {
 					turn = !turn;
 				}
 
