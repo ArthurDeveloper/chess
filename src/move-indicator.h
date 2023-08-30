@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "piece.h"
 
 class MoveIndicator {
 private:
@@ -12,8 +13,12 @@ private:
 public:
 	void indicateCapture();
 
-	MoveIndicator(std::vector<float> position);
+	bool isUnderPiece(Piece piece);
+	
+	void focus();
+	void blur();
 
 	void draw(sf::RenderWindow& window);
 	
+	MoveIndicator(std::vector<float> position);
 };

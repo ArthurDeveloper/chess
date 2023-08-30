@@ -12,9 +12,7 @@
 class Board {
 private:
 	std::vector<std::vector<int>> squares;
-
 	std::vector<std::vector<std::string>> playedMoves;
-	std::vector<MoveIndicator> indicators;
 
 	sf::Texture boardTexture;
 	sf::Sprite boardSprite;
@@ -45,6 +43,7 @@ private:
 
 public:
 	std::vector<Piece> pieces;
+	std::vector<MoveIndicator> indicators;
 
 	void init();
 

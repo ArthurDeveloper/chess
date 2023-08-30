@@ -2,16 +2,15 @@
 
 // TODO
 MoveIndicator::MoveIndicator(std::vector<float> position) {
-	float x = position[0];
-	float y = position[1];
+	x = position[0];
+	y = position[1];
 
 	background.setSize(sf::Vector2f(64.f, 64.f));
 	background.setPosition(x, y);
-	background.setFillColor(sf::Color(125, 125, 125, 150));
-
-	circle.setFillColor(sf::Color(50, 50, 50, 200));
 	circle.setRadius(10);
 	circle.setOrigin(10, 10);
+
+	blur();
 
 	sf::Vector2f circlePos;
 	circlePos.x = background.getPosition().x + background.getSize().x / 2;
@@ -20,9 +19,28 @@ MoveIndicator::MoveIndicator(std::vector<float> position) {
 }
 
 void MoveIndicator::indicateCapture() {
-	circle.setFillColor(sf::Color(50, 50, 50, 200));
 	circle.setRadius(32);
 	circle.setOrigin(32, 32);
+}
+
+bool MoveIndicator::isUnderPiece(Piece piece) {
+	sf::FloatRect bounds(x, y, background.getSize().x, background.getSize().y);
+
+	if (piece.isInsideBounds(bounds)) {
+		return true;
+	}
+
+	return false;
+}
+
+void MoveIndicator::focus() {
+	background.setFillColor(sf::Color(175, 175, 175, 150));
+	circle.setFillColor(sf::Color(225, 225, 225, 200));
+}
+
+void MoveIndicator::blur() {
+	background.setFillColor(sf::Color(125, 125, 125, 150));
+	circle.setFillColor(sf::Color(50, 50, 50, 200));
 }
 
 void MoveIndicator::draw(sf::RenderWindow& window) {

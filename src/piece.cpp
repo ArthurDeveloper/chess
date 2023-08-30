@@ -1,5 +1,4 @@
 #include "piece.h"
-#include <SFML/Graphics/RenderWindow.hpp>
 
 Piece::Piece() {}
 
@@ -101,6 +100,10 @@ void Piece::setPosition(int x, int y) {
 
 bool Piece::isInsideBounds(int x, int y) {
 	return sprite.getGlobalBounds().contains(x, y);
+}
+
+bool Piece::isInsideBounds(sf::FloatRect bounds) {
+	return sprite.getGlobalBounds().intersects(bounds);
 }
 
 void Piece::draw(sf::RenderWindow& window) {

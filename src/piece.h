@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cmath>
@@ -37,7 +39,9 @@ public:
 	void goOneMoveBack();
 	void setLastBoardPosition(int x, int y);
 	void setPosition(int x, int y);
+
 	bool isInsideBounds(int x, int y);
+	bool isInsideBounds(sf::FloatRect rect);
 
 	void draw(sf::RenderWindow& window);
 

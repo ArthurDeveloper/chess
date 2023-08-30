@@ -11,6 +11,24 @@ void Game::dragPiece(sf::RenderWindow& window) {
 	mousePosition = sf::Mouse::getPosition(window); 
 	if (draggedPiece) {
 		draggedPiece->setPosition(mousePosition.x - 32, mousePosition.y - 32);
+		for (MoveIndicator& indicator : board.indicators) {
+			if (indicator.isUnderPiece(*draggedPiece)) {
+				focusedIndicator = &indicator;
+				break;
+			}
+		}
+	}
+}
+
+void Game::updateIndicators() {
+	for (MoveIndicator& indicator : board.indicators) {
+		if (&indicator != focusedIndicator) {
+			indicator.blur();
+		}
+	}
+
+	if (focusedIndicator) {
+		focusedIndicator->focus();
 	}
 }
 
@@ -56,6 +74,7 @@ void Game::handleEvents(sf::RenderWindow& window) {
 				}
 
 				draggedPiece = nullptr;
+				focusedIndicator = nullptr;
 			}
 		}
 	}
@@ -73,6 +92,7 @@ void Game::run(sf::RenderWindow& window) {
 	while (isRunning) {
 		handleEvents(window);
 		dragPiece(window);
+		updateIndicators();
 		draw(window);
 	}
 }
