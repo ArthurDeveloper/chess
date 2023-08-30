@@ -1,7 +1,5 @@
 #include "board.h"
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <cstdlib>
-#include <vector>
+#include "move-indicator.h"
 
 Board::Board() {}
 
@@ -138,13 +136,9 @@ void Board::printMoveHistory() {
 	}
 }
 
-bool Board::isMoveValid(Piece piece, std::vector<int> move) {
+std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 	std::vector<std::vector<int>> validMoves;
 	std::vector<int> lastBoardCoords = piece.getLastBoardCoords();
-
-	if (isKingsideCastle(piece, move) || isQueensideCastle(piece, move)) {
-		return true;
-	}
 
 	auto getKingMoves = [&]() {
 		validMoves.push_back(squareAbove(lastBoardCoords));
@@ -335,6 +329,25 @@ bool Board::isMoveValid(Piece piece, std::vector<int> move) {
 			break;
 	}
 
+	return validMoves;
+}
+
+void Board::indicateValidMoves(Piece piece) {
+	std::vector<std::vector<int>> moves = getValidMoves(piece);
+
+	for (std::vector<int> move : moves) {
+		MoveIndicator indicator(move[1] * 64, move[0] * 64);
+		indicators.push_back(indicator);
+	}
+}
+
+bool Board::isMoveValid(Piece piece, std::vector<int> move) {
+	std::vector<std::vector<int>> validMoves = getValidMoves(piece);
+
+	if (isKingsideCastle(piece, move) || isQueensideCastle(piece, move)) {
+		return true;
+	}
+
 	for (std::vector<int> validMove : validMoves) {
 		if (validMove[0] >= 0 && validMove[1] <= squares.size() - 1 && validMove == move) {
 			return true;
@@ -386,6 +399,8 @@ bool Board::isQueensideCastle(Piece piece, std::vector<int> move) {
 }
 
 bool Board::makeMove(Piece& piece, std::vector<int> move) {
+	indicators.clear();
+
 	std::vector<int> lastCoords = piece.getLastBoardCoords();
 	int colorFactor = piece.getColor() == WHITE ? 1 : -1;
 
@@ -465,7 +480,11 @@ bool Board::makeMove(Piece& piece, std::vector<int> move) {
 void Board::draw(sf::RenderWindow& window) {
 	window.draw(boardSprite);
 
-	for (int i = 0; i < pieces.size(); i++) {
-		pieces[i].draw(window);
+	for (MoveIndicator indicator : indicators) {
+		indicator.draw(window);
+	}
+
+	for (Piece piece : pieces) {
+		piece.draw(window);
 	}
 }

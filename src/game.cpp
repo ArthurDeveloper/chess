@@ -35,6 +35,8 @@ void Game::handleEvents(sf::RenderWindow& window) {
 						std::vector<int> boardCoords = draggedPiece->getBoardCoords();
 
 						draggedPiece->setLastBoardPosition(boardCoords[0], boardCoords[1]);
+
+						board.indicateValidMoves(*draggedPiece);
 					}
 				}
 			}
@@ -61,7 +63,7 @@ void Game::handleEvents(sf::RenderWindow& window) {
 
 void Game::draw(sf::RenderWindow& window) {
 	window.clear();
-		
+	
 	board.draw(window);
 
 	window.display();

@@ -1,6 +1,10 @@
 #pragma once
 
 #include "piece.h"
+#include "move-indicator.h"
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <cstdlib>
+#include <vector>
 
 #define KINGSIDE 1
 #define QUEENSIDE -1
@@ -8,7 +12,9 @@
 class Board {
 private:
 	std::vector<std::vector<int>> squares;
+
 	std::vector<std::vector<std::string>> playedMoves;
+	std::vector<MoveIndicator> indicators;
 
 	sf::Texture boardTexture;
 	sf::Sprite boardSprite;
@@ -28,6 +34,7 @@ private:
 
 	bool isInsideBoard(std::vector<int> coords);
 
+	std::vector<std::vector<int>> getValidMoves(Piece piece);
 	bool isMoveValid(Piece piece, std::vector<int> move);
 	bool isKingsideCastle(Piece piece, std::vector<int> move);
 	bool isQueensideCastle(Piece piece, std::vector<int> move);
@@ -47,6 +54,7 @@ public:
 	int& operator[](std::string at);
 
 	bool makeMove(Piece& piece, std::vector<int> move);
+	void indicateValidMoves(Piece piece);
 
 	void draw(sf::RenderWindow& window);
 

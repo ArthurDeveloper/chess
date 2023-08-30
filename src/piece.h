@@ -17,6 +17,8 @@ class Piece {
 private:
 	int type;
 	int color;
+	bool captured;
+
 	sf::Sprite sprite;
 
 	std::vector<int> lastBoardPosition;
@@ -35,7 +37,6 @@ public:
 	void goOneMoveBack();
 	void setLastBoardPosition(int x, int y);
 	void setPosition(int x, int y);
-
 	bool isInsideBounds(int x, int y);
 
 	void draw(sf::RenderWindow& window);
