@@ -10,8 +10,10 @@ private:
 	sf::RectangleShape background;
 
 public:
-	MoveIndicator(float x, float y);
+	void indicateCapture();
+
+	MoveIndicator(std::vector<float> position);
 
 	void draw(sf::RenderWindow& window);
-
+	
 };

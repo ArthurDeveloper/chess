@@ -24,6 +24,8 @@ private:
 
 	void loadPieces();
 
+	std::vector<float> toScreenCoords(std::vector<int> boardCoords);
+
 	int getSquareColor(int square);
 	int getSquareColor(std::vector<int> square);
 

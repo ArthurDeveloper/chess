@@ -63,6 +63,10 @@ void Board::loadPieces() {
 	}
 }
 
+std::vector<float> Board::toScreenCoords(std::vector<int> boardCoords) {
+	return { (float)boardCoords[1] * 64, (float)boardCoords[0] * 64 };
+}
+
 std::vector<int> Board::operator[](int at) const {
 	return squares[at];
 }
@@ -140,26 +144,32 @@ std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 	std::vector<std::vector<int>> validMoves;
 	std::vector<int> lastBoardCoords = piece.getLastBoardCoords();
 
+	auto pushMoveIfItIsInsideBoard = [&](std::vector<int> move) {
+		if (isInsideBoard(move)) {
+			validMoves.push_back(move);
+		}
+	};
+
 	auto getKingMoves = [&]() {
-		validMoves.push_back(squareAbove(lastBoardCoords));
-		validMoves.push_back(squareAtLeft(squareAbove(lastBoardCoords)));
-		validMoves.push_back(squareAtRight(squareAbove(lastBoardCoords)));
-		validMoves.push_back(squareAtLeft(lastBoardCoords));
-		validMoves.push_back(squareAtRight(lastBoardCoords));
-		validMoves.push_back(squareBelow(lastBoardCoords));
-		validMoves.push_back(squareAtLeft(squareBelow(lastBoardCoords)));
-		validMoves.push_back(squareAtRight(squareBelow(lastBoardCoords)));
+		pushMoveIfItIsInsideBoard(squareAbove(lastBoardCoords));
+		pushMoveIfItIsInsideBoard(squareAtLeft(squareAbove(lastBoardCoords)));
+		pushMoveIfItIsInsideBoard(squareAtRight(squareAbove(lastBoardCoords)));
+		pushMoveIfItIsInsideBoard(squareAtLeft(lastBoardCoords));
+		pushMoveIfItIsInsideBoard(squareAtRight(lastBoardCoords));
+		pushMoveIfItIsInsideBoard(squareBelow(lastBoardCoords));
+		pushMoveIfItIsInsideBoard(squareAtLeft(squareBelow(lastBoardCoords)));
+		pushMoveIfItIsInsideBoard(squareAtRight(squareBelow(lastBoardCoords)));
 	};
 
 	auto getKnightMoves = [&]() {
-		validMoves.push_back(squareAtLeft(squareAbove(squareAbove(lastBoardCoords))));
-		validMoves.push_back(squareAtRight(squareAbove(squareAbove(lastBoardCoords))));
-		validMoves.push_back(squareAtLeft(squareBelow(squareBelow(lastBoardCoords))));
-		validMoves.push_back(squareAtRight(squareBelow(squareBelow(lastBoardCoords))));
-		validMoves.push_back(squareAbove(squareAtLeft(squareAtLeft(lastBoardCoords))));
-		validMoves.push_back(squareBelow(squareAtLeft(squareAtLeft(lastBoardCoords))));
-		validMoves.push_back(squareAbove(squareAtRight(squareAtRight(lastBoardCoords))));
-		validMoves.push_back(squareBelow(squareAtRight(squareAtRight(lastBoardCoords))));
+		pushMoveIfItIsInsideBoard(squareAtLeft(squareAbove(squareAbove(lastBoardCoords))));
+		pushMoveIfItIsInsideBoard(squareAtRight(squareAbove(squareAbove(lastBoardCoords))));
+		pushMoveIfItIsInsideBoard(squareAtLeft(squareBelow(squareBelow(lastBoardCoords))));
+		pushMoveIfItIsInsideBoard(squareAtRight(squareBelow(squareBelow(lastBoardCoords))));
+		pushMoveIfItIsInsideBoard(squareAbove(squareAtLeft(squareAtLeft(lastBoardCoords))));
+		pushMoveIfItIsInsideBoard(squareBelow(squareAtLeft(squareAtLeft(lastBoardCoords))));
+		pushMoveIfItIsInsideBoard(squareAbove(squareAtRight(squareAtRight(lastBoardCoords))));
+		pushMoveIfItIsInsideBoard(squareBelow(squareAtRight(squareAtRight(lastBoardCoords))));
 	};
 
 	auto getBishopMoves = [&]() {
@@ -335,8 +345,14 @@ std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 void Board::indicateValidMoves(Piece piece) {
 	std::vector<std::vector<int>> moves = getValidMoves(piece);
 
-	for (std::vector<int> move : moves) {
-		MoveIndicator indicator(move[1] * 64, move[0] * 64);
+	for (auto move : moves) {
+		if (getSquareColor(move) == piece.getColor()) continue;
+		
+		MoveIndicator indicator(toScreenCoords(move));
+		if (getSquareColor(move) != piece.getColor() && (*this)[move] != EMPTY) {
+			indicator.indicateCapture();
+		}
+
 		indicators.push_back(indicator);
 	}
 }
