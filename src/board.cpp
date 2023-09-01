@@ -1,7 +1,7 @@
 #include "board.h"
 #include "move-indicator.h"
 
-Board::Board() {}
+Board::Board() { }
 
 void Board::init() {
 	squares = {
@@ -228,6 +228,7 @@ std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 
 	auto getRookMoves = [&]() {
 		std::vector<int> currentMove = squareAtRight(lastBoardCoords);
+		std::cout << currentMove[0] << " " << currentMove[1] << std::endl;
 
 		while (isInsideBoard(currentMove) && (*this)[currentMove] == EMPTY) {
 			validMoves.push_back(currentMove);	
@@ -235,9 +236,7 @@ std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 		}
 
 		if (getSquareColor(currentMove) != -1 != piece.getColor()) {
-			if (isInsideBoard(currentMove)) {
-				validMoves.push_back(currentMove);
-			}
+			pushMoveIfItIsInsideBoard(currentMove);
 		}
 
 		currentMove = squareAtLeft(lastBoardCoords);
@@ -247,10 +246,8 @@ std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 			currentMove = squareAtLeft(currentMove);
 		}
 
-		if (getSquareColor(currentMove) != piece.getColor()) {
-			if (isInsideBoard(currentMove)) {
-				validMoves.push_back(currentMove);
-			}
+		if (getSquareColor(currentMove) != -1 != piece.getColor()) {
+			pushMoveIfItIsInsideBoard(currentMove);
 		}
 
 		currentMove = squareAbove(lastBoardCoords);
@@ -260,23 +257,19 @@ std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 			currentMove = squareAbove(currentMove);
 		}
 
-		if (getSquareColor(currentMove) != piece.getColor()) {
-			if (isInsideBoard(currentMove)) {
-				validMoves.push_back(currentMove);
-			}
+		if (getSquareColor(currentMove) != -1 != piece.getColor()) {
+			pushMoveIfItIsInsideBoard(currentMove);
 		}
 
 		currentMove = squareBelow(lastBoardCoords);
 
 		while (isInsideBoard(currentMove) && (*this)[currentMove] == EMPTY) {
-			validMoves.push_back(currentMove);	
+			validMoves.push_back(currentMove);
 			currentMove = squareBelow(currentMove);
 		}
 
-		if (getSquareColor(currentMove) != piece.getColor()) {
-			if (isInsideBoard(currentMove)) {
-				validMoves.push_back(currentMove);
-			}
+		if (getSquareColor(currentMove) != -1 != piece.getColor()) {
+			pushMoveIfItIsInsideBoard(currentMove);
 		}
 	};
 
@@ -307,7 +300,7 @@ std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 			}
 
 			if ((*this)[lastBoardCoords[0] + 2 * pieceFactor][lastBoardCoords[1]] == EMPTY && isInFirstRank) {
-				validMoves.push_back({ lastBoardCoords[0] + 2 * pieceFactor, lastBoardCoords[1] });
+				pushMoveIfItIsInsideBoard({ lastBoardCoords[0] + 2 * pieceFactor, lastBoardCoords[1] });
 			}
 		}
 	};
@@ -325,7 +318,8 @@ std::vector<std::vector<int>> Board::getValidMoves(Piece piece) {
 			getBishopMoves();
 			break;
 		
-		case ROOK: 
+		case ROOK:
+			std::cout << "Get our moves" << std::endl; 
 			getRookMoves();	
 			break;
 
@@ -365,6 +359,7 @@ bool Board::isMoveValid(Piece piece, std::vector<int> move) {
 	}
 
 	for (std::vector<int> validMove : validMoves) {
+		// TODO: Put this condition on checkValidMoves function instead
 		if (validMove[0] >= 0 && validMove[1] <= squares.size() - 1 && validMove == move) {
 			return true;
 		}
@@ -414,8 +409,68 @@ bool Board::isQueensideCastle(Piece piece, std::vector<int> move) {
 	return false;
 }
 
+bool Board::isKingChecked(int color) {
+	std::vector<int> kingSquare;
+
+	for (int rank = 0; rank < squares.size(); rank++) {
+		for (int file = 0; file < squares[rank].size(); file++) {
+			int colorFactor = color == WHITE ? 1 : -1;
+			if ((*this)[rank][file] == (KING * colorFactor)) {
+				kingSquare = { rank, file };
+			}
+		}
+	}
+
+	for (Piece piece : pieces) {
+		if (piece.getType() == KING || piece.getColor() == color) continue;
+
+		// TODO: Fix seg fault here
+		std::vector<std::vector<int>> validMoves = getValidMoves(piece);
+	
+		if (validMoves.size() == 0) continue;
+
+		for (std::vector<int> validMove : validMoves) {
+			if (validMove == kingSquare) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+void Board::indicateCheck() {
+	auto findKing = [&](int color) {
+		for (Piece piece : pieces) {
+			if (piece.getType() == KING && piece.getColor() == color) {
+				return piece.getBoardCoords();
+			}
+		}
+
+		return (std::vector<int>(0, 0));
+	};
+
+	/*if (isKingChecked(WHITE)) {
+		std::vector<int> kingCoords = findKing(WHITE);
+		MoveIndicator checkIndicator(toScreenCoords(kingCoords));
+		checkIndicator.indicateCheck();
+		indicators.push_back(checkIndicator);
+	} else if (isKingChecked(BLACK)) {
+		std::vector<int> kingCoords = findKing(BLACK);
+		MoveIndicator checkIndicator(toScreenCoords(kingCoords));
+		checkIndicator.indicateCheck();
+		indicators.push_back(checkIndicator);
+	}*/	
+}
+
 bool Board::makeMove(Piece& piece, std::vector<int> move) {
 	indicators.clear();
+
+	// Can't move if your king is checked
+	/*if (isKingChecked(piece.getColor())) {
+		
+		return false;
+	}*/
 
 	std::vector<int> lastCoords = piece.getLastBoardCoords();
 	int colorFactor = piece.getColor() == WHITE ? 1 : -1;

@@ -39,6 +39,9 @@ private:
 	bool isKingsideCastle(Piece piece, std::vector<int> move);
 	bool isQueensideCastle(Piece piece, std::vector<int> move);
 
+	bool isKingChecked(int color);
+	void indicateCheck();
+
 	void printMoveHistory();
 
 public:

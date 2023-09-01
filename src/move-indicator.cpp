@@ -23,6 +23,10 @@ void MoveIndicator::indicateCapture() {
 	circle.setOrigin(32, 32);
 }
 
+void MoveIndicator::indicateCheck() {
+	background.setFillColor(sf::Color(255, 0, 0, 200));
+}
+
 bool MoveIndicator::isUnderPiece(Piece piece) {
 	sf::FloatRect bounds(x, y, background.getSize().x, background.getSize().y);
 

@@ -19,14 +19,12 @@ class Piece {
 private:
 	int type;
 	int color;
-	bool captured;
 
 	sf::Sprite sprite;
 
 	std::vector<int> lastBoardPosition;
 
 public:
-
 	int getX();
 	int getY();
 	int getColor();

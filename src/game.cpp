@@ -39,7 +39,6 @@ void Game::handleEvents(sf::RenderWindow& window) {
 			window.close();
 			isRunning = false;
 		}
-
 		if (event.type == sf::Event::MouseButtonPressed) {
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 				for (int i = 0; i < 32; i++) {

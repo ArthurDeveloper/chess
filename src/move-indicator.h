@@ -12,6 +12,7 @@ private:
 
 public:
 	void indicateCapture();
+	void indicateCheck();
 
 	bool isUnderPiece(Piece piece);
 	

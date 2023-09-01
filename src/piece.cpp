@@ -6,6 +6,8 @@ Piece::Piece(int type, int color, sf::Sprite sprite) {
 	this->type = type;
 	this->color = color;
 	this->sprite = sprite;
+
+	lastBoardPosition = getBoardCoords();
 }
 
 int Piece::getX() {
